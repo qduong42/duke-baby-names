@@ -78,6 +78,23 @@ public class BabyBirths {
 
         return -1; // Name not found in the file
     }
+	public void String getName(int year, int rank, String gender){
+		FileResource fr = new FileResource();
+		int currentRank = 0;
+		for(CSVRecord record : fr.getCSVParser()){
+			String currentName = record.get(0);
+			String currentGender = record.get(1);
+
+			if (currentGender.equals(gender)){
+				currentRank++;
+
+				if(rank == currentRank){
+					return currentName;
+				}
+			}
+		}
+		return "NO NAME";
+	}
 	public void testTotalBirths () {
 		FileResource fr = new FileResource();
 		//FileResource fr = new FileResource("data/yob2014.csv");
