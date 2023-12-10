@@ -50,7 +50,8 @@ public class BabyBirths {
 	}
 
     public int getRank(int year, String name, String gender) {
-        FileResource fr = new FileResource();
+		String fileName = "data/testing/yob" + year + "short" + ".csv";
+        FileResource fr = new FileResource(fileName);
 
         // ArrayList<CSVRecord> records = new ArrayList<>();
         // for (CSVRecord rec : fr.getCSVParser(false)) {
@@ -78,16 +79,16 @@ public class BabyBirths {
 
         return -1; // Name not found in the file
     }
-	public void String getName(int year, int rank, String gender){
-		FileResource fr = new FileResource();
+	public String getName(int year, int rank, String gender){
+		String fileName = "data/testing/yob" + year + "short" + ".csv";
+		FileResource fr = new FileResource(fileName);
 		int currentRank = 0;
-		for(CSVRecord record : fr.getCSVParser()){
+		for(CSVRecord record : fr.getCSVParser(false)){
 			String currentName = record.get(0);
 			String currentGender = record.get(1);
 
 			if (currentGender.equals(gender)){
 				currentRank++;
-
 				if(rank == currentRank){
 					return currentName;
 				}
@@ -100,9 +101,15 @@ public class BabyBirths {
 		//FileResource fr = new FileResource("data/yob2014.csv");
 		totalBirths(fr);
 	}
+	public void whatIsNameInYear(String name, int year, int newYear, String gender){
+		int rank = getRank(year, name, gender);
+		String nameinNewYear = getName(newYear, rank, gender);
+		System.out.println(name + " born in " + year + " would be " + nameinNewYear + " if she was born in " + newYear);
+	}
 	public static void main(String[] args) {
 		BabyBirths bb = new BabyBirths();
-		//System.out.println(bb.getRank(2012, "Ethan", "M"));
-		bb.testTotalBirths();
+		//System.out.println(bb.getName(2012, 10, "M"));
+		bb.whatIsNameInYear("Isabella", 2012, 2014, "F");
+		//bb.testTotalBirths();
 	}
 }
