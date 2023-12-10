@@ -149,6 +149,29 @@ public class BabyBirths {
 		}
 		return year;
 	}
+	public double getAverageRank(String name, String gender){
+		DirectoryResource dr = new DirectoryResource();
+		CSVParser parser = null;
+		int count = 0;
+		double totalRank = 0;
+		int currentRank = 0;
+		String fileName = "";
+		int year = 0;
+		for (File f : dr.selectedFiles())
+		{
+			FileResource fr = new FileResource(f);
+			parser = fr.getCSVParser(false);
+			currentRank = getRank(name, gender, parser);
+			if (currentRank != -1){
+				totalRank += currentRank;
+				count++;
+			}
+		}
+		if (count == 0){
+			return -1.0;
+		}
+		return (totalRank / count);
+	}
 	public static void main(String[] args) {
 		BabyBirths bb = new BabyBirths();
 		//System.out.println(bb.getName(2012, 10, "M"));
