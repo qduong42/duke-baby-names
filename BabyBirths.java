@@ -156,7 +156,6 @@ public class BabyBirths {
 		double totalRank = 0;
 		int currentRank = 0;
 		String fileName = "";
-		int year = 0;
 		for (File f : dr.selectedFiles())
 		{
 			FileResource fr = new FileResource(f);
@@ -172,12 +171,38 @@ public class BabyBirths {
 		}
 		return (totalRank / count);
 	}
+	public int getTotalBirthsRankedHigher(int year, String name, String gender){
+		FileResource fr = new FileResource();
+		CSVParser parser = fr.getCSVParser(false);
+		int totalBirths = 0;
+		int rank = getRank(year, name, gender);
+		int currentRank = 0;
+		for (CSVRecord rec : parser) {
+            String currentName = rec.get(0);
+            String currentGender = rec.get(1);
+
+            if (currentGender.equals(gender)) {
+			//if(prevRec == null || Integer.parseInt(rec.get(2)) < Integer.parseInt(prevRec.get(2))) 
+            	currentRank++;
+			//prevRec = rec;
+
+                if (currentRank != rank) {
+					totalBirths += Integer.parseInt(rec.get(2));
+                }
+				else{
+					break;
+            }
+		}
+	}
+		return totalBirths;
+	}
 	public static void main(String[] args) {
 		BabyBirths bb = new BabyBirths();
 		//System.out.println(bb.getName(2012, 10, "M"));
 		//bb.whatIsNameInYear("Isabella", 2012, 2014, "F");
 		//bb.testTotalBirths();
 		//System.out.println("mason was the highest rank in " + bb.yearOfHighestRank("Mason", "M"));
-		System.out.println(bb.getAverageRank("Mason", "M"));
+		//System.out.println(bb.getAverageRank("Mason", "M"));
+		System.out.println(bb.getTotalBirthsRankedHigher(2012, "Ethan", "M"));
 	}
 }
