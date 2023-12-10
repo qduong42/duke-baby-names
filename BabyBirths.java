@@ -59,16 +59,16 @@ public class BabyBirths {
 
         // Sort the records based on the number of births (descending order)
         //records.sort(Comparator.comparingInt(rec -> -Integer.parseInt(rec.get(2))));
-		CSVRecord prevRec = null;
+		//CSVRecord prevRec = null;
         int rank = 0;
         for (CSVRecord rec : fr.getCSVParser(false)) {
             String currentName = rec.get(0);
             String currentGender = rec.get(1);
 
             if (currentGender.equals(gender)) {
-				if(prevRec == null || Integer.parseInt(rec.get(2)) < Integer.parseInt(prevRec.get(2))) 
-                	rank++;
-				prevRec = rec;
+			//if(prevRec == null || Integer.parseInt(rec.get(2)) < Integer.parseInt(prevRec.get(2))) 
+            	rank++;
+			//prevRec = rec;
 
                 if (currentName.equals(name)) {
                     return rank;
