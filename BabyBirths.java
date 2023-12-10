@@ -49,7 +49,35 @@ public class BabyBirths {
 		System.out.println("Total names = " + totalnames);
 	}
 
+    public int getRank(int year, String name, String gender) {
+        FileResource fr = new FileResource();
 
+        // ArrayList<CSVRecord> records = new ArrayList<>();
+        // for (CSVRecord rec : fr.getCSVParser(false)) {
+        //     records.add(rec);
+        // }
+
+        // Sort the records based on the number of births (descending order)
+        //records.sort(Comparator.comparingInt(rec -> -Integer.parseInt(rec.get(2))));
+		CSVRecord prevRec = null;
+        int rank = 0;
+        for (CSVRecord rec : fr.getCSVParser(false)) {
+            String currentName = rec.get(0);
+            String currentGender = rec.get(1);
+
+            if (currentGender.equals(gender)) {
+				if(prevRec == null || Integer.parseInt(rec.get(2)) < Integer.parseInt(prevRec.get(2))) 
+                	rank++;
+				prevRec = rec;
+
+                if (currentName.equals(name)) {
+                    return rank;
+                }
+            }
+        }
+
+        return -1; // Name not found in the file
+    }
 	public void testTotalBirths () {
 		FileResource fr = new FileResource();
 		//FileResource fr = new FileResource("data/yob2014.csv");
