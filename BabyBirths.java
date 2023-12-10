@@ -6,6 +6,7 @@
 import edu.duke.*;
 import org.apache.commons.csv.*;
 import java.util.*;
+import java.io.File;
 
 public class BabyBirths {
 	public void printNames () {
@@ -79,6 +80,24 @@ public class BabyBirths {
 
         return -1; // Name not found in the file
     }
+	public int getRank(String name, String gender, CSVParser parser){
+		int rank = 0;
+        for (CSVRecord rec : parser) {
+            String currentName = rec.get(0);
+            String currentGender = rec.get(1);
+
+            if (currentGender.equals(gender)) {
+			//if(prevRec == null || Integer.parseInt(rec.get(2)) < Integer.parseInt(prevRec.get(2))) 
+            	rank++;
+			//prevRec = rec;
+
+                if (currentName.equals(name)) {
+                    return rank;
+                }
+            }
+        }
+        return -1; // Name not found in the file
+	}
 	public String getName(int year, int rank, String gender){
 		String fileName = "data/testing/yob" + year + "short" + ".csv";
 		FileResource fr = new FileResource(fileName);
@@ -106,10 +125,36 @@ public class BabyBirths {
 		String nameinNewYear = getName(newYear, rank, gender);
 		System.out.println(name + " born in " + year + " would be " + nameinNewYear + " if she was born in " + newYear);
 	}
+
+	public int yearOfHighestRank(String name, String gender){
+		DirectoryResource dr = new DirectoryResource();
+		CSVParser parser = null;
+		int highestRank = Integer.MAX_VALUE;
+		int currentRank = 0;
+		String fileName = "";
+		int year = 0;
+		for (File f : dr.selectedFiles())
+		{
+			FileResource fr = new FileResource(f);
+			parser = fr.getCSVParser(false);
+			currentRank = getRank(name, gender, parser);
+			if (currentRank < highestRank && currentRank != -1){
+				highestRank = currentRank;
+				fileName = f.getName();
+			}
+		}
+		year = Integer.parseInt(fileName.substring(3,7));
+		if (highestRank == Integer.MAX_VALUE){
+			return -1;
+		}
+		return year;
+	}
 	public static void main(String[] args) {
 		BabyBirths bb = new BabyBirths();
 		//System.out.println(bb.getName(2012, 10, "M"));
-		bb.whatIsNameInYear("Isabella", 2012, 2014, "F");
+		//bb.whatIsNameInYear("Isabella", 2012, 2014, "F");
 		//bb.testTotalBirths();
+		//System.out.println("mason was the highest rank in " + bb.yearOfHighestRank("Mason", "M"));
+		System.out.println(bb.getAverageRank("Mason", "M"));
 	}
 }
